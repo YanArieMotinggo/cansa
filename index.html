@@ -22,6 +22,8 @@
             font-family: 'Comic Neue', cursive;
             overflow: hidden;
             position: relative;
+            max-width: 2560px;
+            margin: 0 auto;
         }
         
         .container {
@@ -90,7 +92,7 @@
             font-weight: bold;
             cursor: pointer;
             border-radius: 50px;
-            transition: all 0.3s ease;
+            transition: all 0.3s ease, transform 0.2s ease;
             border: none;
             font-family: 'Comic Neue', cursive;
             position: relative;
@@ -109,7 +111,7 @@
         }
         
         #yesButton:hover {
-            transform: translateY(-5px);
+            transform: scale(1.05);
             box-shadow: 0 10px 20px rgba(92, 219, 92, 0.4);
             background: linear-gradient(45deg, #7eff7e, #4acf4a);
         }
@@ -117,12 +119,12 @@
         #noButton {
             background: linear-gradient(45deg, #ff9e9e, #ff5c5c);
             color: #8a1a1a;
-            position: absolute;
             transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         
         #noButton:hover {
             background: linear-gradient(45deg, #ff7e7e, #ff4a4a);
+            transform: scale(1.05);
         }
         
         .bubble {
@@ -172,29 +174,85 @@
             animation: dance 2s infinite;
         }
         
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
+        .pc-help-message {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px 20px;
+            border-radius: 50px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            animation: float 3s infinite ease-in-out;
+            font-family: 'Comic Neue', cursive;
+            font-size: 1.2rem;
+            color: #ff4d94;
+            display: none;
         }
         
-        @keyframes floatBubble {
-            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-            10% { opacity: 0.7; }
-            90% { opacity: 0.7; }
-            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        .floating-text {
+            position: absolute;
+            background: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            font-family: 'Comic Neue', cursive;
+            font-size: 1rem;
+            color: #ff4d94;
+            opacity: 0;
+            z-index: 4;
+            animation: floatText 3s forwards;
         }
-        
-        @keyframes sparkle {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(1.3); }
+
+        /* PC-Specific Styles */
+        @media only screen and (min-width: 1200px) and (max-width: 1919px) {
+            .container {
+                max-width: 900px;
+            }
+            
+            .header_text {
+                font-size: 4rem;
+            }
+            
+            .gif_container img {
+                max-width: 600px;
+            }
+            
+            .btn {
+                padding: 20px 40px;
+                font-size: 1.8rem;
+            }
+
+            .pc-help-message {
+                display: block;
+            }
         }
-        
-        @keyframes dance {
-            0%, 100% { transform: rotate(0deg); }
-            25% { transform: rotate(5deg); }
-            75% { transform: rotate(-5deg); }
+
+        @media only screen and (min-width: 1920px) {
+            .container {
+                max-width: 1200px;
+                padding: 60px;
+            }
+            
+            .header_text {
+                font-size: 5rem;
+            }
+            
+            .gif_container img {
+                max-width: 800px;
+            }
+            
+            .btn {
+                padding: 25px 50px;
+                font-size: 2rem;
+            }
+
+            .pc-help-message {
+                display: block;
+                font-size: 1.5rem;
+            }
         }
-        
+
+        /* Mobile Responsiveness */
         @media only screen and (max-width: 768px) {
             .container {
                 padding: 25px;
@@ -222,6 +280,36 @@
                 font-size: 1.2rem;
             }
         }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        
+        @keyframes floatBubble {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.7; }
+            90% { opacity: 0.7; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+        
+        @keyframes sparkle {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.3); }
+        }
+        
+        @keyframes dance {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(5deg); }
+            75% { transform: rotate(-5deg); }
+        }
+        
+        @keyframes floatText {
+            0% { opacity: 0; transform: translateY(0); }
+            20% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { opacity: 0; transform: translateY(-100px); }
+        }
     </style>
 </head>
 <body>
@@ -237,6 +325,11 @@
     <div class="cute-element" style="bottom: 10%; left: 20%;">🐻</div>
     <div class="cute-element" style="bottom: 15%; right: 25%;">🦄</div>
     
+    <!-- PC Help Message -->
+    <div class="pc-help-message">
+        <span>👋 Click "I'm Great!" if you're happy today!</span>
+    </div>
+    
     <!-- Counter -->
     <div class="counter">
         <i class="fas fa-heart"></i>
@@ -245,17 +338,22 @@
     
     <div class="container">
         <div>
-            <h1 class="header_text">How are you feeling today? 💖</h1>
+            <h1 class="header_text">Cansa how are you feeling today?</h1>
         </div>
+        
+        <div class="dancing-text">
+            Let me know with a click!
+        </div>
+        
         <div class="gif_container">
-            <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDdtZ2JiZDR0a3lvMWF4OG8yc3p6Ymdvd3g2d245amdveDhyYmx6eCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/cLS1cfxvGOPVpf9g3y/giphy.gif" alt="Cute animated illustration">
+            <img src="image.png" alt="Cute GIF">
         </div>
         
         <div class="buttons">
             <button class="btn" id="yesButton" onclick="nextPage()">
                 <i class="fas fa-smile"></i> I'm Great!
             </button>
-            <button class="btn" id="noButton" onmouseover="moveButton()" onclick="moveButton()">
+            <button class="btn" id="noButton" onmouseover="moveButton()" onclick="clickNoButton()">
                 <i class="fas fa-frown"></i> Not Really
             </button>
         </div>
@@ -292,12 +390,26 @@
             // Hide buttons and show message
             document.querySelector('.buttons').innerHTML = `
                 <div style="font-size: 2rem; color: #5cdb5c; font-weight: bold; padding: 20px;">
-                    vid call later?
+                    Let's vid call later
                 </div>
             `;
             
             // Change background to celebration
             document.body.style.background = "linear-gradient(135deg, #c2ffc2, #9eff9e, #7eff7e)";
+        }
+
+        function clickNoButton() {
+            const button = document.getElementById('noButton');
+            // change the button text using const messages above
+            if (counter < messages.length) {
+                button.innerHTML = `<i class="fas fa-frown"></i> ${messages[counter]}`;
+            } else {
+                button.innerHTML = `<i class="fas fa-smile"></i> Okay, I'm happy!`;
+                button.style.background = "linear-gradient(45deg, #9eff9e, #5cdb5c)";
+                button.style.color = "#1a661a";
+                button.onclick = nextPage;
+                return;
+            }
         }
         
         function moveButton() {
@@ -321,25 +433,15 @@
             // Create a heart when hovering
             createHeart();
             
-            // Calculate new position
-            const maxX = window.innerWidth - button.offsetWidth - 50;
-            const maxY = window.innerHeight - button.offsetHeight - 50;
+            // Create floating text
+            createFloatingText("Come back!", button);
             
-            const x = Math.random() * maxX;
-            const y = Math.random() * maxY;
-            
-            // Apply new position with smooth transition
-            button.style.transform = `translate(${x}px, ${y}px)`;
-            button.style.transition = "transform 0.5s ease-out";
-            
-            // Add rotation effect
-            button.style.rotate = `${Math.random() * 20 - 10}deg`;
         }
         
         function createHeart() {
             const heart = document.createElement('div');
             heart.classList.add('hearts');
-            heart.innerHTML = '☺️';
+            heart.innerHTML = '😗';
             heart.style.left = `${Math.random() * 100}vw`;
             heart.style.top = `${Math.random() * 100}vh`;
             heart.style.fontSize = `${Math.random() * 30 + 20}px`;
@@ -357,6 +459,21 @@
                     heart.remove();
                 }
             }, 50);
+        }
+        
+        function createFloatingText(text, button) {
+            const rect = button.getBoundingClientRect();
+            const floatingText = document.createElement('div');
+            floatingText.classList.add('floating-text');
+            floatingText.textContent = text;
+            floatingText.style.left = `${rect.left}px`;
+            floatingText.style.top = `${rect.top}px`;
+            document.body.appendChild(floatingText);
+            
+            // Remove after animation
+            setTimeout(() => {
+                floatingText.remove();
+            }, 3000);
         }
         
         // Create floating bubbles
